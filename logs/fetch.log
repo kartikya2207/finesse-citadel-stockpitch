@@ -1,0 +1,104 @@
+symbols=806
+$^CNXSC: possibly delisted; no price data found  (1d 2018-06-01 -> 2026-09-02)
+  benchmark NIFTY500: 2027 rows 2018-06-01..2026-09-01
+  benchmark NIFTY50: 2033 rows 2018-06-01..2026-09-01
+  benchmark NIFTYMIDCAP100: 1996 rows 2018-06-01..2026-09-01
+  [warn] benchmark NIFTYSMLCAP100 (^CNXSC) empty
+benchmarks done (2034, 4)
+$ADANITRANS.NS: possibly delisted; no timezone found
+$AMARAJABAT.NS: possibly delisted; no timezone found
+$AEGISCHEM.NS: possibly delisted; no timezone found
+
+3 Failed downloads:
+['ADANITRANS.NS', 'AMARAJABAT.NS', 'AEGISCHEM.NS']: possibly delisted; no timezone found
+$CADILAHC.NS: possibly delisted; no timezone found
+$COX&KINGS.NS: possibly delisted; no timezone found
+
+2 Failed downloads:
+['CADILAHC.NS', 'COX&KINGS.NS']: possibly delisted; no timezone found
+$DHFL.NS: possibly delisted; no timezone found
+$DUMMYINXGN.NS: possibly delisted; no timezone found
+$DUMMYTRVN.NS: possibly delisted; no timezone found
+$EQUITAS.NS: possibly delisted; no timezone found
+$DUMMYINGL2.NS: possibly delisted; no timezone found
+$DUMMYINGL1.NS: possibly delisted; no timezone found
+
+6 Failed downloads:
+['DHFL.NS', 'DUMMYINXGN.NS', 'DUMMYTRVN.NS', 'EQUITAS.NS', 'DUMMYINGL2.NS', 'DUMMYINGL1.NS']: possibly delisted; no timezone found
+$GUJGASLTD.NS: possibly delisted; no timezone found
+$GMRINFRA.NS: possibly delisted; no timezone found
+
+2 Failed downloads:
+['GUJGASLTD.NS', 'GMRINFRA.NS']: possibly delisted; no timezone found
+$IBULHSGFIN.NS: possibly delisted; no timezone found
+$IIFLWAM.NS: possibly delisted; no timezone found
+$IIFLSEC.NS: possibly delisted; no timezone found
+$HDFC.NS: possibly delisted; no timezone found
+
+4 Failed downloads:
+['IBULHSGFIN.NS', 'IIFLWAM.NS', 'IIFLSEC.NS', 'HDFC.NS']: possibly delisted; no timezone found
+$JPASSOCIAT.NS: possibly delisted; no timezone found
+
+1 Failed download:
+['JPASSOCIAT.NS']: possibly delisted; no timezone found
+$LTI.NS: possibly delisted; no timezone found
+$MAGMA.NS: possibly delisted; no timezone found
+
+2 Failed downloads:
+['LTI.NS', 'MAGMA.NS']: possibly delisted; no timezone found
+$MOTHERSUMI.NS: possibly delisted; no timezone found
+$MINDTREE.NS: possibly delisted; no timezone found
+Failed to get ticker 'OSWALPUMPS.NS' reason: Failed to perform, curl: (35) TLS connect error: error:100000f7:SSL routines:OPENSSL_internal:WRONG_VERSION_NUMBER. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
+$OSWALPUMPS.NS: possibly delisted; no timezone found
+
+3 Failed downloads:
+['MOTHERSUMI.NS', 'MINDTREE.NS', 'OSWALPUMPS.NS']: possibly delisted; no timezone found
+$PHILIPCARB.NS: possibly delisted; no timezone found
+
+1 Failed download:
+['PHILIPCARB.NS']: possibly delisted; no timezone found
+$RUCHI.NS: possibly delisted; no timezone found
+$SITICABLE.NS: possibly delisted; no timezone found
+$SINTEX.NS: possibly delisted; no timezone found
+
+3 Failed downloads:
+['RUCHI.NS', 'SITICABLE.NS', 'SINTEX.NS']: possibly delisted; no timezone found
+$TATASTLLP.NS: possibly delisted; no timezone found
+$TATAMTRDVR.NS: possibly delisted; no timezone found
+$TATACOFFEE.NS: possibly delisted; no timezone found
+$SRTRANSFIN.NS: possibly delisted; no timezone found
+$SREINFRA.NS: possibly delisted; no timezone found
+$SPICEJET.NS: possibly delisted; no timezone found
+
+6 Failed downloads:
+['TATASTLLP.NS', 'TATAMTRDVR.NS', 'TATACOFFEE.NS', 'SRTRANSFIN.NS', 'SREINFRA.NS', 'SPICEJET.NS']: possibly delisted; no timezone found
+$VODAFONE.NS: possibly delisted; no timezone found
+$UJJIVAN.NS: possibly delisted; no timezone found
+$TV18BRDCST.NS: possibly delisted; no timezone found
+
+3 Failed downloads:
+['VODAFONE.NS', 'UJJIVAN.NS', 'TV18BRDCST.NS']: possibly delisted; no timezone found
+  prices 60/806
+  prices 120/806
+  prices 180/806
+  prices 240/806
+  prices 300/806
+  prices 360/806
+  prices 420/806
+  prices 480/806
+  prices 540/806
+  prices 600/806
+  prices 660/806
+  prices 720/806
+  prices 780/806
+  prices 806/806
+prices done (1287393, 6) in 69s
+  shares 100/806  ok=100
+  shares 200/806  ok=199
+  shares 300/806  ok=295
+  shares 400/806  ok=395
+  shares 500/806  ok=495
+  shares 600/806  ok=595
+  shares 700/806  ok=694
+  shares 800/806  ok=793
+shares done (675554, 3) in 103s

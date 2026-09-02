@@ -1,0 +1,2 @@
+2026-09-02T17:27:58.944849+00:00  FROZEN strategy='COMP_allweather_quarterly_invvol_n10_volq20' params={"cadence": "quarterly", "cap": 0.2, "capital": 10000000.0, "cost_per_side": 0.001, "floor": 0.05, "n_hold": 10, "score_method": "zscore_sum", "score_spec": {"efficiency_6m": 1.0, "max_dd_1y": 1.0, "pct_up_months_12m": 1.0, "rar_mom_12m_skip1": 1.0}, "screens": {"vol_1y": ["drop_top_pctile", 0.2]}, "sleeves": ["NIFTY100", "MIDCAP100", "SMALLCAP100"], "weighting": "invvol"}
+2026-09-02T17:27:58.945528+00:00  UNSEALED stress window 2026-01-01..2026-06-30

@@ -1,0 +1,15 @@
+UNIVERSE EW (300 names, quarterly):  final=Rs2.768cr  CAGR=22.62%  MDD=-22.5%
+
+RANDOM-10 CONTROL (200 seeds), PNL in lakh:
+  mean=165.4  median=157.3  sd=58.8
+  p05=   87.1
+  p25=  123.8
+  p50=  157.3
+  p75=  200.4
+  p90=  244.3
+  p95=  273.5
+  p99=  327.4
+  max=362.1
+  percentile of MOM_mom_9m (293.0L): 96.5%
+  percentile of MOM_mom_12m (272.2L): 94.5%
+  percentile of B0 brief baseline (151.6L): 45.0%

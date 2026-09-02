@@ -1,0 +1,43 @@
+{
+  "frozen_at_utc": "2026-09-02T17:27:58.941941+00:00",
+  "strategy_name": "COMP_allweather_quarterly_invvol_n10_volq20",
+  "parameters": {
+    "score_spec": {
+      "rar_mom_12m_skip1": 1.0,
+      "pct_up_months_12m": 1.0,
+      "max_dd_1y": 1.0,
+      "efficiency_6m": 1.0
+    },
+    "cadence": "quarterly",
+    "weighting": "invvol",
+    "cap": 0.2,
+    "floor": 0.05,
+    "n_hold": 10,
+    "screens": {
+      "vol_1y": [
+        "drop_top_pctile",
+        0.2
+      ]
+    },
+    "sleeves": [
+      "NIFTY100",
+      "MIDCAP100",
+      "SMALLCAP100"
+    ],
+    "score_method": "zscore_sum",
+    "cost_per_side": 0.001,
+    "capital": 10000000.0
+  },
+  "rationale": "Selected on rebalance-phase STABILITY, not on the maximum of a phase distribution. Across 6 semiannual and 3 quarterly rebalance phases COMP_allweather has PNL std Rs24-30L vs Rs67-84L for every momentum rival, the shallowest max drawdown (-27.2%), and four economically distinct legs each defensible in one sentence. Rivals scoring higher (mom_12m Rs427L) do so only at their best phase and collapse ~50% at their worst.",
+  "source_sha256": {
+    "src/config.py": "4f8d82decd72f0f6d32488d048864044d38eb1f33e4e458dc7af539d2f94aeec",
+    "src/signals.py": "4bc464e482f94114d7411a088e1d0952fbbfa82e5ed3297efce912d7266cdbab",
+    "src/backtest.py": "5413e8281576e87302059cb261706dca163879e9ff0b6ae999f7358a2f24e52c",
+    "src/strategies.py": "8738cd797390a9b9e1c90a55519fc1955aeba22fc9ee55bcf60cf4e9442c11c7"
+  },
+  "in_sample_window": [
+    "2021-01-01",
+    "2025-12-31"
+  ],
+  "note": "Written before any 2026 result was computed. Any parameter differing from this file in the final submission is a post-hoc change and must be treated as invalid."
+}
