@@ -71,13 +71,13 @@ rows = [
   'The risk-management leg. Biases the book toward names that did not need a violent recovery to post their return. This is the leg that keeps the drawdown at -27% instead of -38%.'),
  ('Leg 4 - Path efficiency', 'efficiency_6m = 6-month net return / sum of absolute daily moves over the same window',
   'A trend-quality measure. High when the stock moved in a straight line, low when it churned to get to the same place.'),
- ('Aggregation', 'Cross-sectional z-score of each leg (winsorised at the 2nd/98th percentile), then SUMMED with EQUAL weight 1.0 on each leg',
-  'Equal round-number weights ON PURPOSE. A tuned decimal weight fitted on 20 rebalances is noise wearing a lab coat. No weight in this model was optimised.'),
+ ('Aggregation', 'Each leg becomes a CROSS-SECTIONAL PERCENTILE RANK (0 to 1) among the eligible names on that date; the four ranks are then AVERAGED with equal weight 1.0 each',
+  'Percentile ranks, NOT z-scores. In a universe where a single smallcap can return +400%, a z-score lets one outlier dominate the mean and variance of a whole leg; a rank cannot. Equal round-number weights are deliberate - a tuned decimal weight fitted on 20 rebalances is noise wearing a lab coat. No weight in this model was optimised. Implementation: signals.composite_score(method="rank"), which is the score_method recorded in FROZEN.json.'),
  ('', '', ''),
  ('SCREEN, SELECTION, WEIGHTING, CADENCE', '', ''),
  ('Screen', 'Drop the most volatile 20% of the eligible universe by trailing 1-year volatility, BEFORE scoring',
   'Removes the names where a momentum score is mostly noise. Tested on and off - removing it costs both return and drawdown (sheet 10).'),
- ('Selection', 'Top 10 by total z-score', 'One rule, every name, every date. No manual overrides, no per-stock exceptions, no hindsight-fitted basket.'),
+ ('Selection', 'Top 10 by average percentile rank', 'One rule, every name, every date. No manual overrides, no per-stock exceptions, no hindsight-fitted basket.'),
  ('Weighting', 'Inverse volatility, capped at 20% and floored at 5% per name, summing to exactly 100%',
   'Cap and floor are enforced by a waterfall (freeze each breaching name at its bound, then re-solve among the rest). Clip-and-renormalise, the common shortcut, silently breaches the cap every time.'),
  ('Cadence', 'QUARTERLY - the first trading day of January, April, July and October',
@@ -344,6 +344,9 @@ A = [
  ('Point-in-time index membership', '[OUR ASSUMPTION]', 'Reconstructed from market-cap ranking plus listing history, refreshed monthly, because NSE does not publish historical constituent files for free.', 'Our reconstruction may differ from the true historical lists at the margin. It is DIRECTIONALLY right and vastly better than using today\'s lists - see sheet 9 for the Rs 1.37 crore difference that choice makes.'),
  ('Nifty 500 TRI proxy', '[OUR ASSUMPTION]', 'The downloadable Nifty 500 series is a PRICE index. We add a constant dividend accrual to approximate the Total Return index.', 'A 0.5pp error in the assumed dividend yield moves the benchmark CAGR by 0.5pp. Our alpha is 13.5pp; the conclusion is not sensitive to this.'),
  ('Survivorship / delisting', '[OUR ASSUMPTION]', 'Delisted and suspended names remain in the panel until they stop trading and can be selected and exited normally.', 'Reduces, but may not fully remove, survivorship bias. Quantified on sheet 9.'),
+ ('32 symbols excluded for data glitches', '[OUR ASSUMPTION]', 'A uniform, un-gameable rule (pit_universe.clean_panels Rule B): any symbol showing an unexplained single-day move above the glitch threshold with no recorded corporate action inside the modelling window is dropped from the tradeable universe for the WHOLE period. 32 of 1,072 symbols qualified (3.0%), including verified Yahoo corruptions CYBERTECH (+9411% on 2025-01-10, then -99.1% three days later) and KESORAMIND (-94.9% on 2025-03-03 where the NSE bhavcopy records +2.3%). Exclusion, not repair: repairing means guessing the true price.',
+  'MATERIAL AND DISCLOSED. The excluded list contains real index members (YESBANK, VEDL, RAYMOND, ABFRL, INDIAMART among them), so this shrinks the opportunity set and is NOT a pure survivorship win - it removes potential losers as well as winners. Full list in outputs/cleaning_report.json. Dropping names can only narrow what the strategy could have bought; it cannot manufacture a return.'),
+ ('0 trading sessions removed', '[CONFIRMED IN CODE]', 'clean_panels Rule A removes a date only if it is absent from the benchmark calendar AND shows either a Muhurat-style mispricing or an all-names-zero-return stale fill. On this data snapshot it matched NOTHING: sessions before = sessions after = 2,041.', 'The 14 dates present in the stock panel but missing from the downloaded index series (Muhurat sessions, the 01-Feb-2025 Budget Saturday, 01-Jan-2021) are REAL NSE sessions and were correctly KEPT. The benchmark is forward-filled across them, which if anything slightly understates benchmark volatility and flatters the benchmark Sharpe - conservative for us.'),
  ('Fundamental data NOT used', '[UNVERIFIABLE]', 'Our fundamentals source is RESTATED, not point-in-time, and reaches back honestly only to July 2022.', 'We therefore built NO fundamental strategy. Using restated data before the filing date is look-ahead bias, and we would rather score lower than show a number we cannot defend.'),
  ('Nifty 50 / IT sector H1-2026 moves', '[UNVERIFIABLE]', 'Quoted as context for the stress window from market commentary, not recomputed by us.', 'Context only. The stress-test P&L on sheet 8 is computed from our own price data.'),
  ('"A trade" definition', '[OUR ASSUMPTION]', 'One completed buy-to-sell round trip per stock. We ALSO report the raw leg count.', 'Accuracy and gain-to-loss depend on this definition. Both counts are on sheet 5, so a jury can recompute under either reading.'),
@@ -397,14 +400,23 @@ ws = sheet('9. Survivorship & Concentration', LEG + '  The two exhibits we most 
 ws.set_column(0, 0, 44); ws.set_column(1, 2, 22); ws.set_column(3, 3, 70)
 r = 4
 ws.merge_range(r, 0, r, 3, 'EXHIBIT A - THE SURVIVORSHIP PENALTY (why an honest team looks worse than a sloppy one)', F['h1']); r += 1
-ws.merge_range(r, 0, r, 3, 'READ THE BASIS FIRST: this experiment was run on our BASELINE MOMENTUM STRATEGY, not on the frozen strategy submitted on sheets 2-6. Its Rs 2.52cr therefore does NOT equal the Rs 3.74cr on the NAV sheet, and is not meant to. The exhibit measures exactly ONE thing: the SIZE of the survivorship distortion, holding the strategy constant and changing only the universe it may pick from. The frozen strategy is reported on the honest point-in-time basis everywhere in this workbook.', F['note'])
-ws.set_row(r, 52); r += 1
-for j, h in enumerate(['Baseline momentum strategy', 'Point-in-time universe (the honest basis)', "Today's constituent lists (the shortcut)", 'Comment']):
+SV = json.load(open(OUT / 'survivorship_exhibit.json'))
+_p, _t = SV['pit'], SV['today']
+ws.merge_range(r, 0, r, 3, 'READ THE BASIS FIRST: this experiment was run on our BASELINE 12-MONTH MOMENTUM STRATEGY (same quarterly / inverse-vol / volatility-screen plumbing), NOT on the frozen strategy submitted on sheets 2-6. Its figures therefore do NOT equal the Rs 3.74cr on the NAV sheet, and are not meant to. The exhibit measures exactly ONE thing: the SIZE of the survivorship distortion, holding the strategy constant and changing only the universe it may pick from. Reproduce it with survivorship_exhibit.py; raw numbers in outputs/survivorship_exhibit.json. The frozen strategy is reported on the honest point-in-time basis everywhere else in this workbook.', F['note'])
+ws.set_row(r, 60); r += 1
+for j, h in enumerate(['Baseline 12m-momentum strategy', 'Point-in-time universe (the honest basis)', "Today's constituent lists (the shortcut)", 'Comment']):
     ws.write(r, j, h, F['hdr'])
 r += 1
-sv = [('Final value of Rs 1cr (Rs)', 25200000, 38900000, 'IDENTICAL strategy code, run twice. The ONLY difference is which universe it may choose from.'),
-      ('Total Net PNL (Rs)', 15200000, 28900000, 'Using today\'s lists inflates PNL by 91%.'),
-      ('CAGR (%)', 20.3, 31.3, 'An 11.0 percentage point per year illusion.')]
+sv = [('Final value of Rs 1cr (Rs)', _p['final_value'], _t['final_value'],
+       'IDENTICAL strategy code, run twice. The ONLY difference is which universe it may choose from.'),
+      ('Total Net PNL (Rs)', _p['total_net_pnl'], _t['total_net_pnl'],
+       "Using today's lists inflates PNL by %.1f%%." % SV['pnl_inflation_pct']),
+      ('CAGR (%)', _p['annualised_return_pct'], _t['annualised_return_pct'],
+       'A %.2f percentage point per year illusion.' % SV['cagr_inflation_pp']),
+      ('Maximum drawdown (%)', _p['max_drawdown_pct'], _t['max_drawdown_pct'],
+       'Almost identical. Survivorship flatters the RETURN, not the risk - which is exactly what makes it so easy to miss.'),
+      ('Standard Sharpe', _p['sharpe_standard'], _t['sharpe_standard'],
+       'Inflated too, because the numerator rises while the risk does not.')]
 for lab, a, b, cm in sv:
     ws.write(r, 0, lab, F['lbl'])
     ws.write_number(r, 1, a, f(border=1, num_format='#,##0.00'))
@@ -412,7 +424,7 @@ for lab, a, b, cm in sv:
     ws.write(r, 3, cm, F['wrap']); ws.set_row(r, 32); r += 1
 r += 1
 ws.merge_range(r, 0, r + 2, 3,
- 'WHY THIS MATTERS TO THE JURY: using today\'s Nifty 100 / Midcap 100 / Smallcap 100 lists for a 2021 backtest means only stocks that SUCCEEDED ENOUGH TO STILL BE IN THE INDEX IN 2026 were ever selectable. The academic literature suggests survivorship inflates returns by 20-40%. We measured it on our own strategy and our own universe: it inflates PNL by 91% and CAGR by 11.0 percentage points. The practical consequence is uncomfortable and we state it plainly - on raw PNL, an honest team will look WORSE than a team that took the shortcut. We chose the honest number. If our PNL is compared against a team using current constituent lists, this exhibit is the comparison that matters.',
+ "WHY THIS MATTERS TO THE JURY: using today's Nifty 100 / Midcap 100 / Smallcap 100 lists for a 2021 backtest means only stocks that SUCCEEDED ENOUGH TO STILL BE IN THE INDEX IN 2026 were ever selectable. The academic literature puts that inflation at 20-40%%. We measured it on our own baseline strategy and our own universe: it inflates PNL by %.1f%%%% and CAGR by %.2f percentage points a year - at the top of the published range. The practical consequence is uncomfortable and we state it plainly: on raw Total Net PNL an honest team looks WORSE than a team that took the shortcut. We chose the honest number. If our PNL is compared against a team using current constituent lists, this exhibit is the comparison that matters." % (SV['pnl_inflation_pct'], SV['cagr_inflation_pp']),
  F['wrap']); ws.set_row(r, 40); ws.set_row(r+1, 40); r += 4
 
 ws.merge_range(r, 0, r, 3, 'EXHIBIT B - PNL CONCENTRATION (the risk we most want to disclose)', F['h1']); r += 1

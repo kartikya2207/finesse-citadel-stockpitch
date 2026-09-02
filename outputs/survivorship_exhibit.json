@@ -1,0 +1,23 @@
+{
+  "baseline_strategy": "mom_12m quarterly invvol cap20/floor5 volq20 n10",
+  "pit": {
+    "final_value": 41899768.241817854,
+    "total_net_pnl": 31899768.241817854,
+    "annualised_return_pct": 33.23380579018242,
+    "max_drawdown_pct": -32.65110222609857,
+    "sharpe_standard": 1.5189275484302813,
+    "n_trades": 136.0
+  },
+  "today": {
+    "final_value": 55833572.98014952,
+    "total_net_pnl": 45833572.98014952,
+    "annualised_return_pct": 41.11340572602258,
+    "max_drawdown_pct": -33.61351227532212,
+    "sharpe_standard": 1.7701097740349079,
+    "n_trades": 119.0
+  },
+  "pnl_inflation_pct": 43.67995601944734,
+  "cagr_inflation_pp": 7.8795999358401545,
+  "today_list_names": 300,
+  "today_names_in_panel": 294
+}

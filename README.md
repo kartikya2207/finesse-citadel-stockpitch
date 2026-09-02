@@ -10,7 +10,7 @@ A point-in-time-honest systematic equity backtest for the Finesse × Citadel sto
 
 ## The frozen strategy
 
-**`COMP_allweather`.** Every quarter (first trading day of Jan/Apr/Jul/Oct) we take the **point-in-time** membership of the three eligible indices — the constituents as of *that date*, reconstructed from market-cap ranking and listing history, never today's lists. We drop the most volatile 20% of that universe, then rank every survivor on an **equal-weighted composite of four winsorised cross-sectional z-scores**: risk-adjusted 12-month momentum (skip the most recent month), fraction of up months over 12 months, trailing-1-year maximum drawdown, and 6-month path efficiency. We buy the top 10, weighted **inverse-volatility with a 20% cap and 5% floor**, and hold three months. One rule, every stock, every date — no hand-picked names, no per-stock overrides, no tuned weights.
+**`COMP_allweather`.** Every quarter (first trading day of Jan/Apr/Jul/Oct) we take the **point-in-time** membership of the three eligible indices — the constituents as of *that date*, reconstructed from market-cap ranking and listing history, never today's lists. We drop the most volatile 20% of that universe, then rank every survivor on an **equal-weighted average of four cross-sectional percentile ranks**: risk-adjusted 12-month momentum (skip the most recent month), fraction of up months over 12 months, trailing-1-year maximum drawdown, and 6-month path efficiency. We buy the top 10, weighted **inverse-volatility with a 20% cap and 5% floor**, and hold three months. One rule, every stock, every date — no hand-picked names, no per-stock overrides, no tuned weights.
 
 Frozen at **2026-09-02T17:27:58Z** — see [`FROZEN.json`](FROZEN.json), which stores the full parameter set plus a SHA-256 of every strategy source file. The 2026 stress window was **sealed in code** (any post-2025 price read raised an exception) until that moment; the freeze timestamp is also the unseal timestamp, and every attempt is logged to `logs/seal.log`.
 
@@ -40,14 +40,16 @@ Frozen at **2026-09-02T17:27:58Z** — see [`FROZEN.json`](FROZEN.json), which s
 
 ## The survivorship finding
 
-We ran **identical strategy code** twice, changing only which universe it was allowed to pick from. **Basis: our BASELINE momentum strategy, not the frozen submission above** — this experiment isolates the size of the distortion by holding the strategy constant, so its ₹2.52 cr is deliberately *not* the ₹3.739 cr headline.
+We ran **identical strategy code** twice, changing only which universe it was allowed to pick from. **Basis: our BASELINE 12-month-momentum strategy, not the frozen submission above** — this experiment isolates the size of the distortion by holding the strategy constant, so its figures are deliberately *not* the ₹3.739 cr headline. Reproduce with `python survivorship_exhibit.py`; raw output in [`outputs/survivorship_exhibit.json`](outputs/survivorship_exhibit.json).
 
 | Baseline momentum strategy | Point-in-time universe (honest) | Today's constituent lists (the shortcut) |
 |---|---:|---:|
-| Final value of ₹1 cr | **₹2.52 cr** | ₹3.89 cr |
-| CAGR | **20.3%** | 31.3% |
+| Final value of ₹1 cr | **₹4.19 cr** | ₹5.58 cr |
+| Total Net PNL | **₹3.19 cr** | ₹4.58 cr |
+| CAGR | **33.23%** | 41.11% |
+| Maximum drawdown | −32.65% | −33.61% |
 
-**Using today's index lists inflates PNL by 91% and CAGR by 11.0 percentage points** — against the 20–40% the literature suggests. The uncomfortable consequence, stated plainly: on raw Total Net PNL an honest team looks *worse* than a sloppy one. We chose the honest number.
+**Using today's index lists inflates PNL by 43.7% and CAGR by 7.88 percentage points a year** — at the top of the 20–40% range the literature suggests. Note the drawdown barely moves: survivorship flatters the *return*, not the risk, which is what makes it so easy to miss. The uncomfortable consequence, stated plainly: on raw Total Net PNL an honest team looks *worse* than a sloppy one. We chose the honest number.
 
 ## Install
 
@@ -78,6 +80,7 @@ python freeze_and_build.py        # -> outputs/frozen_run.pkl
 python build_exhibits.py          # -> outputs/exhibits.pkl (benchmark + EW universe)
 python build_workbook.py          # -> FINESSE_CITADEL_SUBMISSION.xlsx
 python verify_wb.py               # re-opens the workbook, checks every formula reference
+python survivorship_exhibit.py    # -> outputs/survivorship_exhibit.json (the PIT vs today's-lists test)
 
 # Optional: re-run the strategy search (119 trials, appends to outputs/trials.jsonl)
 python run_sweep1.py    # 48 single signals and composites
@@ -103,9 +106,10 @@ Coverage includes a **hand-computed ₹98,010 round-trip case** (buy and sell a 
 | `src/config.py` | Single source of truth for every constant; `[SPEC]` = from the rules, `[ASSUMPTION]` = our choice |
 | `src/data_fetch.py` | Downloads prices, shares outstanding and the benchmark; writes the parquet caches |
 | `reproduce_data.py` | One-command rebuild of every git-ignored data cache, then the integrity checks |
-| `src/integrity.py` | Data-quality checks against NSE bhavcopy (delisting, Muhurat sessions, stale-filled holidays) |
+| `src/integrity.py` | Data-quality checks against NSE bhavcopy (calendar reconciliation, unexplained jumps, level shifts, history gaps, backfill) |
+| `survivorship_exhibit.py` | Runs the baseline strategy on the PIT universe and on today's constituent lists, and writes the comparison |
 | `src/pit_universe.py` | Reconstructs point-in-time index membership; builds and cleans the price/volume panels |
-| `src/signals.py` | All ~40 features (momentum, volatility, trend, quality-of-trend, liquidity, size, beta/residual) |
+| `src/signals.py` | All 47 features (momentum, volatility, trend, quality-of-trend, liquidity, size, beta/residual) |
 | `src/strategies.py` | Declarative `Strategy` object → target weights; rebalance calendars, cap/floor waterfall, screens |
 | `src/backtest.py` | Event-driven engine; charges 0.1% on every leg, tracks positions, legs and round trips |
 | `src/metrics.py` | Both Sharpe definitions, CAGR, MDD, gain-to-loss, accuracy, trade statistics |
@@ -124,7 +128,7 @@ Coverage includes a **hand-computed ₹98,010 round-trip case** (buy and sell a 
 ## Data sources and how PIT membership is built
 
 - **Prices / volumes / shares outstanding** — Yahoo Finance via `yfinance`, adjusted for splits and bonuses.
-- **NSE bhavcopy** — official daily end-of-day files, used as the *arbiter* whenever Yahoo and the official record disagree. This is how we caught CYBERTECH and KESORAMIND (corrupt adjusted series), the Muhurat trading sessions, and four NSE holidays that Yahoo stale-filled as zero-return trading days. Zero-return fake days deflate volatility and therefore *inflate* every Sharpe ratio — removing them makes our numbers worse, which is the point.
+- **NSE bhavcopy** — official daily end-of-day files, used as the *arbiter* whenever Yahoo and the official record disagree. This is how we caught the corrupted adjusted series — CYBERTECH prints +9411% on 2025-01-10 then −99.1% three days later; KESORAMIND prints −94.9% on 2025-03-03 where the bhavcopy records +2.3%. A uniform rule (`clean_panels` Rule B) excludes any symbol with an unexplained single-day move and no recorded corporate action inside the window: **32 of 1,072 symbols, 3.0%**, listed in `outputs/cleaning_report.json`. That list includes real index members (YESBANK, VEDL, RAYMOND, ABFRL), so it removes potential losers as well as winners — it narrows the opportunity set rather than flattering the result. **No trading sessions were removed** (2,041 before and after): the 14 dates present in the stock panel but missing from the downloaded index series — Muhurat sessions, the 01-Feb-2025 Budget Saturday, 01-Jan-2021 — are real NSE sessions and were correctly kept. The benchmark is forward-filled across them, which slightly understates benchmark volatility and mildly flatters the benchmark, i.e. it is conservative for us.
 - **Index constituent lists** — NSE's published `ind_nifty*list.csv` files (committed in `data/raw/`), used for *current* membership and sector tags only.
 - **Benchmark** — Nifty 500. The freely downloadable series is a **price** index; we approximate the TRI by adding a constant dividend accrual. A 0.5pp error in that assumption moves the benchmark CAGR by 0.5pp, against our 13.5pp alpha.
 

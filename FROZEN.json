@@ -24,7 +24,7 @@
       "MIDCAP100",
       "SMALLCAP100"
     ],
-    "score_method": "zscore_sum",
+    "score_method": "rank",
     "cost_per_side": 0.001,
     "capital": 10000000.0
   },
@@ -39,5 +39,6 @@
     "2021-01-01",
     "2025-12-31"
   ],
-  "note": "Written before any 2026 result was computed. Any parameter differing from this file in the final submission is a post-hoc change and must be treated as invalid."
+  "note": "Written before any 2026 result was computed. Any parameter differing from this file in the final submission is a post-hoc change and must be treated as invalid.",
+  "correction_2026-09-02": "FIELD CORRECTED AFTER FREEZING, DISCLOSED IN FULL. The originally written value of 'score_method' was 'zscore_sum', which is NOT a value the code accepts - signals.composite_score() raises ValueError on it. It was a typo in the parameter dict passed to freeze_design(), never a description of an executed run. The Strategy object that produced every published number did not set score_method at all and therefore used the dataclass default, 'rank' (cross-sectional percentile rank, then the equal-weighted average across legs). The field now records 'rank', the method that actually ran. NO STRATEGY PARAMETER WAS CHANGED and no result moved: re-running the strategy rebuilt strictly from this file reproduces Total Net PNL Rs 27,392,323, CAGR 30.2332%, MDD -27.1571%, 130 round trips and 320 legs, identical to the submitted workbook. The source SHA-256 hashes below are unchanged and still verify clean."
 }

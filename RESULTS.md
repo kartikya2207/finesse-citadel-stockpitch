@@ -6,7 +6,7 @@
 
 `COMP_allweather` — quarterly · inverse-vol weighted, capped 20% / floored 5% · 10 names · drop the most volatile 20% of the eligible universe before scoring.
 
-Score = equal-weighted sum of four winsorised cross-sectional z-scores: risk-adjusted 12m momentum (skip 1m) + fraction of up months (12m) + trailing-1y max drawdown + 6m path efficiency.
+Score = equal-weighted **average of four cross-sectional percentile ranks**: risk-adjusted 12m momentum (skip 1m) + fraction of up months (12m) + trailing-1y max drawdown + 6m path efficiency. (`score_method="rank"` in `FROZEN.json` — percentile ranks, not z-scores, so one +400% smallcap cannot dominate a leg.)
 
 Frozen at **2026-09-02T17:27:58Z** (`FROZEN.json`, with SHA-256 of every strategy source file). That timestamp is also the stress-window unseal.
 
@@ -47,12 +47,25 @@ Continuous path 1 Jan 2021 → 30 Jun 2026: **₹3,72,39,510**, CAGR 27.07%.
 
 | Year | Strategy | Nifty 500 TRI | EW PIT universe | Strategy max DD |
 |---|---:|---:|---:|---:|
-| 2021 | +66.15% | n/a | +46.89% | −9.16% |
+| 2021 | +66.15% | +29.77% | +46.89% | −9.16% |
 | 2022 | +5.97% | +2.80% | +3.06% | −20.98% |
 | 2023 | +56.56% | +26.62% | +41.93% | −7.44% |
 | 2024 | +47.63% | +16.51% | +23.72% | −12.97% |
 | **2025** | **−8.89%** | **+7.95%** | +2.32% | −21.89% |
 | 2026 H1 (sealed) | −0.22% | −3.13% | +1.68% | −15.51% |
+
+## Survivorship exhibit (baseline strategy, not the frozen one)
+
+Identical code, two universes, 2021–2025. Basis: plain 12-month momentum, same quarterly / inverse-vol / vol-screen plumbing — **not** the frozen strategy, so these figures deliberately differ from the headline above.
+
+| Baseline 12m-momentum | PIT universe (honest) | Today's constituent lists |
+|---|---:|---:|
+| Final value of ₹1cr | **₹4.19 cr** | ₹5.58 cr |
+| Total Net PNL | **₹3.19 cr** | ₹4.58 cr |
+| CAGR | **33.23%** | 41.11% |
+| Max drawdown | −32.65% | −33.61% |
+
+**PNL inflated 43.7%, CAGR inflated 7.88pp/yr** — top of the literature's 20–40% range. The drawdown barely moves: survivorship flatters return, not risk. Reproduce: `python survivorship_exhibit.py`.
 
 ## Why this and not the ₹427L strategy
 

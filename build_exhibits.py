@@ -40,7 +40,9 @@ def yr(nav):
 full=D['FULL']['nav']
 bn_full=P.benchmark_nav(PRIMARY_BENCHMARK,full.index[0],full.index[-1])
 ew_full=pd.concat([ew_is,ew_st*(ew_is.iloc[-1]/CAPITAL)])
-ytab=yr(full).join(yr(bn_full.reindex(full.index).ffill()),rsuffix='_bm').join(yr(ew_full.reindex(full.index).ffill()),rsuffix='_ew')
+# ffill THEN bfill: 2021-01-01 is a real NSE session present in the stock panel but
+# absent from the downloaded index series, so a plain ffill leaves a leading NaN.
+ytab=yr(full).join(yr(bn_full.reindex(full.index).ffill().bfill()),rsuffix='_bm').join(yr(ew_full.reindex(full.index).ffill().bfill()),rsuffix='_ew')
 print('\n',ytab.round(2).to_string())
 
 pickle.dump({'ew_is':ew_is,'ew_st':ew_st,'ew_is_rep':ew_is_rep,'ew_st_rep':ew_st_rep,
