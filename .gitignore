@@ -1,0 +1,37 @@
+# ---- Large cached data ----
+# Regenerate with: python -m src.data_fetch   (see README "Reproduce")
+# data/cache is ~63 MB of price/shares/benchmark parquet
+# data/bhav  is ~73 MB of NSE bhavcopy CSVs used for the integrity checks
+# NOTE: data/raw/ IS committed - index constituent lists + master symbol map (281 KB)
+data/cache/
+data/bhav/
+data/pit/
+
+# ---- Heavy intermediate artefacts ----
+# Regenerate with: python freeze_and_build.py
+# outputs/trials.jsonl, outputs/sweep*.csv and outputs/cleaning_report.json ARE committed
+outputs/*.pkl
+
+# ---- Python ----
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ipynb_checkpoints/
+
+# ---- Environments ----
+.venv/
+venv/
+env/
+.env
+.env.*
+
+# ---- Editors / OS ----
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# ---- Local scratch ----
+scratch/
+tmp/

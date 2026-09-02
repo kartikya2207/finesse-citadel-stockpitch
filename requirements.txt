@@ -1,0 +1,12 @@
+# Pinned to the versions this submission was produced with (Python 3.14.4).
+# Slightly older versions work; pandas >= 2.0 is required.
+pandas==3.0.2
+numpy==2.4.4
+scipy==1.17.1
+pyarrow==25.0.1
+yfinance==1.5.1
+requests==2.34.2
+scikit-learn==1.8.0      # only imported by src/ml.py, which is coded but deliberately NOT run
+XlsxWriter==3.2.9        # writes the submission workbook
+openpyxl==3.1.5          # verifies the workbook re-opens and formulas parse
+pytest==9.1.1
