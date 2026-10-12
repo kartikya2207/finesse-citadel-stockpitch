@@ -23,6 +23,9 @@ To see why this matters I ran the *same* baseline 12-month momentum strategy on 
 
 **3. Searched — and logged every trial.** 119 trials across four sweeps (`run_sweep1..4.py`, register in `outputs/trials.jsonl`). The decisive test was *rebalance phase*: shift the calendar by 1–5 months and see if the result survives. Plain 12-month momentum scored ₹427L on its best phase but ₹223L on its worst (std ₹79L). I ranked candidates on phase stability and accepted a lower headline.
 
+![Rebalance-phase robustness](docs/images/phase_robustness.png)
+*Net PNL for each candidate across six rebalance phases; the frozen strategy has the narrowest spread (plotted from sheet 10 of the submission workbook).*
+
 **4. Froze the strategy before looking at 2026.** The frozen strategy, `COMP_allweather`: every quarter, take the PIT universe, drop the most volatile 20%, rank survivors on an equal-weighted average of four percentile ranks (risk-adjusted 12-month momentum skipping the last month, fraction of up months, trailing 1-year max drawdown, 6-month path efficiency), buy the top 10 inverse-vol weighted with a 20% cap / 5% floor. The 2026 window was sealed in code — any post-2025 price read raised an exception — until the freeze in [`FROZEN.json`](FROZEN.json), which also stores SHA-256 hashes of the strategy source.
 
 ### Results (in-sample 2021–2025, net of costs)
@@ -35,6 +38,9 @@ To see why this matters I ran the *same* baseline 12-month momentum strategy on 
 | Sharpe (standard, ×√252) | 1.66 | 1.16 | 1.42 |
 | Sharpe (competition definition) | 26.28 | 18.45 | 22.58 |
 | Accuracy / gain-to-loss | 61.54% / 1.78 | — | — |
+
+![NAV vs benchmarks](docs/images/nav_vs_benchmarks.png)
+*Daily NAV of the strategy vs the Nifty 500 TRI and the equal-weight PIT universe, with the strategy's drawdown (plotted from the NAV sheet of the submission workbook).*
 
 130 round trips, 320 legs, ₹6,16,428 total costs. **2025 was a losing year (−8.89% vs the benchmark's +7.95%)** and I left it in plain view.
 
