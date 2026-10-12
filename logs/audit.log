@@ -1,0 +1,273 @@
+[search_guard] trading days 2035 (to 2026-09-01) -> 1871 (to 2025-12-31)
+[search_guard] membership reviews kept: 13
+[search_guard] 2026 data is ABSENT from every object the search can read.
+[search_guard] incumbent on truncated world: PNL=27,392,323.21 trades=130 legs=320
+[search_guard] expected                    : PNL=27,392,323.21 trades=130 legs=320
+[search_guard] TRUNCATION IS A NO-OP IN SAMPLE: True
+
+==============================================================================================
+FULL 7-POINT AUDIT :: CHALLENGER_rarAvg_up12_dd1y
+  spec = {"max_dd_1y": 1.0, "pct_up_months_12m": 1.0, "rar_mom_avg_6_12_skip1": 1.0}
+  cadence=quarterly weighting=invvol n=10 cap=0.2 floor=0.05 method=rank
+==============================================================================================
+
+[1] CONSTRAINTS PROVEN IN CODE
+   max concurrent holdings on ANY day : 10      PASS (limit 10)
+   max |sum(weights) - 1|             : 2.22e-16  PASS (<1e-9)
+   weight range (cap 0.2 / floor 0.05) : [0.0678, 0.1571]  PASS
+   max |cost - 0.001*notional|        : 0.00e+00  PASS
+   legs charged / total legs          : 312/312  PASS
+   negative (short) positions         : 0       PASS (long-only)
+   selections outside PIT universe    : 0       PASS
+   window                             : 2021-01-01 .. 2025-12-31  PASS
+
+[2] NO LOOK-AHEAD
+   2026 assertion (panels+features <= 2025-12-31) : PASS
+   shift test: rebalances whose picks CHANGED when inputs shifted 21d : 20/20   PASS
+   shifted-input PNL differs by       : Rs -11,342,266  PASS
+
+[3] METRICS RECOMPUTED BY AN INDEPENDENT PATH (denominators printed)
+   denominator: initial corpus       = Rs 10,000,000
+   denominator: years                = 4.996578  (2021-01-01 -> 2025-12-31, /365.25)
+   denominator: sd of DAILY returns  = 0.01122902  (n-1 over 1235 obs)
+   denominator: round trips          = 122 ; losing trips = 46
+   metric                          independent           engine  match
+   Total Net PNL                 32742461.4350    32742461.4350  OK
+   CAGR %                              33.7391          33.7658  *** MISMATCH ***
+   Max drawdown %                     -24.4611         -24.4611  OK
+   Sharpe competition                  30.0463          30.0701  *** MISMATCH ***
+   Sharpe standard                      1.8927           1.8942  OK
+   Accuracy %                          62.2951          62.2951  OK
+   Gain-to-loss                         2.0986           2.0986  OK
+
+[4] RECONCILIATION: PNL from the TRADE LOG vs PNL from the NAV path
+   cash from replaying every leg      = Rs 0.00
+   market value of open positions     = Rs 42,742,461.44
+   => terminal value from trade log   = Rs 42,742,461.44
+   terminal value from NAV path       = Rs 42,742,461.44
+   difference                         = Rs 0.000000   PASS
+
+[5] TRIPWIRE
+   CAGR 33.74%  (>35% trips?)          ok
+   standard Sharpe 1.89  (>2.5 trips?)   ok
+   2022 drawdown strat -19.28% vs bench -17.53%
+   2025 drawdown strat -20.25% vs bench -12.71%
+   shallower than benchmark in BOTH?     ok
+
+[6] PHASE TEST
+   semiannual, 6 phases :  265.0  262.6  271.0  241.9  270.8  262.8   sd= 10.7L  PASS (<=30L; incumbent 30.1L)
+   quarterly,  3 phases :  327.4  306.7  335.6   sd= 14.9L  (incumbent 24.1L)
+
+[7] EXISTING TEST SUITE UNCHANGED
+   29 passed in 1.10s    PASS
+
+----------------------------------------------------------------------------------------------
+   1_constraints        PASS
+   2_lookahead          PASS
+   3_metrics            *** FAIL ***
+   4_reconciliation     PASS
+   5_tripwire           PASS
+   6_phase              PASS
+   7_tests              PASS
+   >>> AUDIT VERDICT: FAILED - INELIGIBLE
+----------------------------------------------------------------------------------------------
+
+==============================================================================================
+FULL 7-POINT AUDIT :: CHALLENGER_rar12s_up12_dd1y
+  spec = {"max_dd_1y": 1.0, "pct_up_months_12m": 1.0, "rar_mom_12m_skip1": 1.0}
+  cadence=quarterly weighting=invvol n=10 cap=0.2 floor=0.05 method=rank
+==============================================================================================
+
+[1] CONSTRAINTS PROVEN IN CODE
+   max concurrent holdings on ANY day : 10      PASS (limit 10)
+   max |sum(weights) - 1|             : 2.22e-16  PASS (<1e-9)
+   weight range (cap 0.2 / floor 0.05) : [0.0698, 0.1571]  PASS
+   max |cost - 0.001*notional|        : 0.00e+00  PASS
+   legs charged / total legs          : 316/316  PASS
+   negative (short) positions         : 0       PASS (long-only)
+   selections outside PIT universe    : 0       PASS
+   window                             : 2021-01-01 .. 2025-12-31  PASS
+
+[2] NO LOOK-AHEAD
+   2026 assertion (panels+features <= 2025-12-31) : PASS
+   shift test: rebalances whose picks CHANGED when inputs shifted 21d : 20/20   PASS
+   shifted-input PNL differs by       : Rs -8,675,300  PASS
+
+[3] METRICS RECOMPUTED BY AN INDEPENDENT PATH (denominators printed)
+   denominator: initial corpus       = Rs 10,000,000
+   denominator: years                = 4.996578  (2021-01-01 -> 2025-12-31, /365.25)
+   denominator: sd of DAILY returns  = 0.01109345  (n-1 over 1235 obs)
+   denominator: round trips          = 126 ; losing trips = 46
+   metric                          independent           engine  match
+   Total Net PNL                 28650277.8789    28650277.8789  OK
+   CAGR %                              31.0723          31.0985  *** MISMATCH ***
+   Max drawdown %                     -25.8818         -25.8818  OK
+   Sharpe competition                  28.0096          28.0332  *** MISMATCH ***
+   Sharpe standard                      1.7644           1.7659  OK
+   Accuracy %                          63.4921          63.4921  OK
+   Gain-to-loss                         1.8714           1.8714  OK
+
+[4] RECONCILIATION: PNL from the TRADE LOG vs PNL from the NAV path
+   cash from replaying every leg      = Rs -0.00
+   market value of open positions     = Rs 38,650,277.88
+   => terminal value from trade log   = Rs 38,650,277.88
+   terminal value from NAV path       = Rs 38,650,277.88
+   difference                         = Rs -0.000000   PASS
+
+[5] TRIPWIRE
+   CAGR 31.07%  (>35% trips?)          ok
+   standard Sharpe 1.76  (>2.5 trips?)   ok
+   2022 drawdown strat -18.88% vs bench -17.53%
+   2025 drawdown strat -20.25% vs bench -12.71%
+   shallower than benchmark in BOTH?     ok
+
+[6] PHASE TEST
+   semiannual, 6 phases :  255.4  261.3  256.7  243.5  249.4  286.8   sd= 15.0L  PASS (<=30L; incumbent 30.1L)
+   quarterly,  3 phases :  286.5  327.4  332.5   sd= 25.2L  (incumbent 24.1L)
+
+----------------------------------------------------------------------------------------------
+   1_constraints        PASS
+   2_lookahead          PASS
+   3_metrics            *** FAIL ***
+   4_reconciliation     PASS
+   5_tripwire           PASS
+   6_phase              PASS
+   7_tests              SKIPPED
+   >>> AUDIT VERDICT: FAILED - INELIGIBLE
+----------------------------------------------------------------------------------------------
+
+==============================================================================================
+FULL 7-POINT AUDIT :: CHALLENGER_sub3resid
+  spec = {"max_dd_1y": 1.0, "pct_up_months_12m": 1.0, "rar_mom_12m_skip1": 1.0, "resid_mom_12m": 1.0}
+  cadence=quarterly weighting=invvol n=10 cap=0.2 floor=0.05 method=rank
+==============================================================================================
+
+[1] CONSTRAINTS PROVEN IN CODE
+   max concurrent holdings on ANY day : 10      PASS (limit 10)
+   max |sum(weights) - 1|             : 2.22e-16  PASS (<1e-9)
+   weight range (cap 0.2 / floor 0.05) : [0.0680, 0.1570]  PASS
+   max |cost - 0.001*notional|        : 0.00e+00  PASS
+   legs charged / total legs          : 316/316  PASS
+   negative (short) positions         : 0       PASS (long-only)
+   selections outside PIT universe    : 0       PASS
+   window                             : 2021-01-01 .. 2025-12-31  PASS
+
+[2] NO LOOK-AHEAD
+   2026 assertion (panels+features <= 2025-12-31) : PASS
+   shift test: rebalances whose picks CHANGED when inputs shifted 21d : 20/20   PASS
+   shifted-input PNL differs by       : Rs -10,294,226  PASS
+
+[3] METRICS RECOMPUTED BY AN INDEPENDENT PATH (denominators printed)
+   denominator: initial corpus       = Rs 10,000,000
+   denominator: years                = 4.996578  (2021-01-01 -> 2025-12-31, /365.25)
+   denominator: sd of DAILY returns  = 0.01165103  (n-1 over 1235 obs)
+   denominator: round trips          = 126 ; losing trips = 46
+   metric                          independent           engine  match
+   Total Net PNL                 29155248.8560    29155248.8560  OK
+   CAGR %                              31.4133          31.4396  *** MISMATCH ***
+   Max drawdown %                     -26.9187         -26.9187  OK
+   Sharpe competition                  26.9618          26.9844  *** MISMATCH ***
+   Sharpe standard                      1.6984           1.6999  OK
+   Accuracy %                          63.4921          63.4921  OK
+   Gain-to-loss                         1.8539           1.8539  OK
+
+[4] RECONCILIATION: PNL from the TRADE LOG vs PNL from the NAV path
+   cash from replaying every leg      = Rs 0.00
+   market value of open positions     = Rs 39,155,248.86
+   => terminal value from trade log   = Rs 39,155,248.86
+   terminal value from NAV path       = Rs 39,155,248.86
+   difference                         = Rs 0.000000   PASS
+
+[5] TRIPWIRE
+   CAGR 31.41%  (>35% trips?)          ok
+   standard Sharpe 1.70  (>2.5 trips?)   ok
+   2022 drawdown strat -20.84% vs bench -17.53%
+   2025 drawdown strat -22.52% vs bench -12.71%
+   shallower than benchmark in BOTH?     ok
+
+[6] PHASE TEST
+   semiannual, 6 phases :  283.2  337.2  284.8  285.0  283.5  269.4   sd= 23.6L  PASS (<=30L; incumbent 30.1L)
+   quarterly,  3 phases :  291.6  418.9  355.3   sd= 63.7L  (incumbent 24.1L)
+
+----------------------------------------------------------------------------------------------
+   1_constraints        PASS
+   2_lookahead          PASS
+   3_metrics            *** FAIL ***
+   4_reconciliation     PASS
+   5_tripwire           PASS
+   6_phase              PASS
+   7_tests              SKIPPED
+   >>> AUDIT VERDICT: FAILED - INELIGIBLE
+----------------------------------------------------------------------------------------------
+
+==============================================================================================
+FULL 7-POINT AUDIT :: INCUMBENT_allweather
+  spec = {"efficiency_6m": 1.0, "max_dd_1y": 1.0, "pct_up_months_12m": 1.0, "rar_mom_12m_skip1": 1.0}
+  cadence=quarterly weighting=invvol n=10 cap=0.2 floor=0.05 method=rank
+==============================================================================================
+
+[1] CONSTRAINTS PROVEN IN CODE
+   max concurrent holdings on ANY day : 10      PASS (limit 10)
+   max |sum(weights) - 1|             : 2.22e-16  PASS (<1e-9)
+   weight range (cap 0.2 / floor 0.05) : [0.0644, 0.1552]  PASS
+   max |cost - 0.001*notional|        : 0.00e+00  PASS
+   legs charged / total legs          : 320/320  PASS
+   negative (short) positions         : 0       PASS (long-only)
+   selections outside PIT universe    : 0       PASS
+   window                             : 2021-01-01 .. 2025-12-31  PASS
+
+[2] NO LOOK-AHEAD
+   2026 assertion (panels+features <= 2025-12-31) : PASS
+   shift test: rebalances whose picks CHANGED when inputs shifted 21d : 20/20   PASS
+   shifted-input PNL differs by       : Rs -7,236,727  PASS
+
+[3] METRICS RECOMPUTED BY AN INDEPENDENT PATH (denominators printed)
+   denominator: initial corpus       = Rs 10,000,000
+   denominator: years                = 4.996578  (2021-01-01 -> 2025-12-31, /365.25)
+   denominator: sd of DAILY returns  = 0.01150531  (n-1 over 1235 obs)
+   denominator: round trips          = 130 ; losing trips = 50
+   metric                          independent           engine  match
+   Total Net PNL                 27392323.2149    27392323.2149  OK
+   CAGR %                              30.2072          30.2332  *** MISMATCH ***
+   Max drawdown %                     -27.1571         -27.1571  OK
+   Sharpe competition                  26.2550          26.2776  *** MISMATCH ***
+   Sharpe standard                      1.6539           1.6553  OK
+   Accuracy %                          61.5385          61.5385  OK
+   Gain-to-loss                         1.7809           1.7809  OK
+
+[4] RECONCILIATION: PNL from the TRADE LOG vs PNL from the NAV path
+   cash from replaying every leg      = Rs -0.00
+   market value of open positions     = Rs 37,392,323.21
+   => terminal value from trade log   = Rs 37,392,323.21
+   terminal value from NAV path       = Rs 37,392,323.21
+   difference                         = Rs 0.000000   PASS
+
+[5] TRIPWIRE
+   CAGR 30.21%  (>35% trips?)          ok
+   standard Sharpe 1.65  (>2.5 trips?)   ok
+   2022 drawdown strat -20.98% vs bench -17.53%
+   2025 drawdown strat -21.89% vs bench -12.71%
+   shallower than benchmark in BOTH?     ok
+
+[6] PHASE TEST
+   semiannual, 6 phases :  245.3  326.6  266.2  247.4  260.0  258.3   sd= 30.1L  FAIL (<=30L; incumbent 30.1L)
+   quarterly,  3 phases :  273.9  304.8  321.5   sd= 24.1L  (incumbent 24.1L)
+
+----------------------------------------------------------------------------------------------
+   1_constraints        PASS
+   2_lookahead          PASS
+   3_metrics            *** FAIL ***
+   4_reconciliation     PASS
+   5_tripwire           PASS
+   6_phase              *** FAIL ***
+   7_tests              SKIPPED
+   >>> AUDIT VERDICT: FAILED - INELIGIBLE
+----------------------------------------------------------------------------------------------
+
+
+================ SHORTLIST SUMMARY ================
+candidate                          PNL(L)    CAGR      MDD     Sh  ph_sd6  ph_sd3  eligible
+CHALLENGER_rarAvg_up12_dd1y         327.4   33.74   -24.46   1.89    10.7    14.9  False
+CHALLENGER_rar12s_up12_dd1y         286.5   31.07   -25.88   1.76    15.0    25.2  False
+CHALLENGER_sub3resid                291.6   31.41   -26.92   1.70    23.6    63.7  False
+INCUMBENT_allweather                273.9   30.21   -27.16   1.65    30.1    24.1  False

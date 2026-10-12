@@ -1,0 +1,68 @@
+[search_guard] trading days 2035 (to 2026-09-01) -> 1871 (to 2025-12-31)
+[search_guard] membership reviews kept: 13
+[search_guard] 2026 data is ABSENT from every object the search can read.
+[search_guard] incumbent on truncated world: PNL=27,392,323.21 trades=130 legs=320
+[search_guard] expected                    : PNL=27,392,323.21 trades=130 legs=320
+[search_guard] TRUNCATION IS A NO-OP IN SAMPLE: True
+Pass A produced 313 candidates
+36 beat the incumbent on PNL (criterion a)
+15 of those also satisfy MDD >= -32% (criterion c)
+   A2|residR+up12                             PNL=  362.3L CAGR=35.88 MDD=-27.78 Sh=1.92
+   A2|rar12+up12                              PNL=  345.9L CAGR=34.90 MDD=-30.17 Sh=1.79
+   A2|rar12s+up12                             PNL=  336.6L CAGR=34.33 MDD=-28.98 Sh=1.77
+   A2|rarAvg+up12+dd1y                        PNL=  327.4L CAGR=33.77 MDD=-24.46 Sh=1.89
+   A2|rarAvg+up12                             PNL=  323.8L CAGR=33.54 MDD=-28.98 Sh=1.74
+   A2|sub3:rar12                              PNL=  308.4L CAGR=32.56 MDD=-25.66 Sh=1.79
+   A1|pct_up_months_12m                       PNL=  303.6L CAGR=32.24 MDD=-28.43 Sh=1.74
+   A2|sub3:ma200                              PNL=  300.2L CAGR=32.02 MDD=-28.24 Sh=1.68
+   A2|sub3:resid                              PNL=  291.6L CAGR=31.44 MDD=-26.92 Sh=1.70
+   A2|sub3:mom6s                              PNL=  289.7L CAGR=31.32 MDD=-25.14 Sh=1.69
+   A2|sub0:residR                             PNL=  286.8L CAGR=31.12 MDD=-25.19 Sh=1.72
+   A2|rar12s+up12+dd1y                        PNL=  286.5L CAGR=31.10 MDD=-25.88 Sh=1.77
+   A2|sub0:momAvg                             PNL=  282.6L CAGR=30.83 MDD=-31.09 Sh=1.61
+   A2|sub3:rarAvg                             PNL=  280.5L CAGR=30.69 MDD=-24.43 Sh=1.69
+   A1|mom_3m                                  PNL=  279.3L CAGR=30.60 MDD=-27.57 Sh=1.36
+
+=== PHASE TESTING the top 15 (6 phases each) ===
+  [1/15] A2|residR+up12                           phase_sd=  33.4L min= 315.4 max= 389.0 FAIL(b)  10s
+  [2/15] A2|rar12+up12                            phase_sd=  67.8L min= 256.2 max= 467.7 FAIL(b)  19s
+  [3/15] A2|rar12s+up12                           phase_sd=  72.2L min= 232.0 max= 423.3 FAIL(b)  29s
+  [4/15] A2|rarAvg+up12+dd1y                      phase_sd=  10.7L min= 241.9 max= 271.0 PASS(b)  38s
+  [5/15] A2|rarAvg+up12                           phase_sd=  46.7L min= 295.1 max= 421.6 FAIL(b)  48s
+  [6/15] A2|sub3:rar12                            phase_sd=  41.6L min= 221.3 max= 333.2 FAIL(b)  60s
+  [7/15] A1|pct_up_months_12m                     phase_sd=  38.9L min= 226.7 max= 341.0 FAIL(b)  73s
+  [8/15] A2|sub3:ma200                            phase_sd=  61.8L min= 229.3 max= 384.3 FAIL(b)  85s
+  [9/15] A2|sub3:resid                            phase_sd=  23.6L min= 269.4 max= 337.2 PASS(b)  99s
+  [10/15] A2|sub3:mom6s                            phase_sd=  42.4L min= 246.3 max= 344.4 FAIL(b)  111s
+  [11/15] A2|sub0:residR                           phase_sd=  50.3L min= 236.6 max= 370.5 FAIL(b)  120s
+  [12/15] A2|rar12s+up12+dd1y                      phase_sd=  15.0L min= 243.5 max= 286.8 PASS(b)  130s
+  [13/15] A2|sub0:momAvg                           phase_sd=  38.5L min= 247.3 max= 346.3 FAIL(b)  140s
+  [14/15] A2|sub3:rarAvg                           phase_sd=  34.6L min= 232.9 max= 329.8 FAIL(b)  150s
+  [15/15] A1|mom_3m                                phase_sd= 109.6L min= 249.9 max= 535.0 FAIL(b)  160s
+
+==== PASS B: phase dispersion (criterion b, threshold <= 30L) ====
+INCUMBENT phase_sd = 24.1L, PNL = 273.9L
+               label  pnl_L  cagr    mdd  sharpe_std  phase_sd  phase_min  phase_max
+ A2|rarAvg+up12+dd1y 327.42 33.77 -24.46        1.89     10.68     241.94     271.04
+ A2|rar12s+up12+dd1y 286.50 31.10 -25.88        1.77     15.03     243.46     286.81
+       A2|sub3:resid 291.55 31.44 -26.92        1.70     23.63     269.37     337.21
+      A2|residR+up12 362.33 35.88 -27.78        1.92     33.37     315.41     389.04
+      A2|sub3:rarAvg 280.46 30.69 -24.43        1.69     34.61     232.89     329.81
+      A2|sub0:momAvg 282.61 30.83 -31.09        1.61     38.45     247.32     346.28
+A1|pct_up_months_12m 303.65 32.24 -28.43        1.74     38.90     226.75     341.00
+       A2|sub3:rar12 308.45 32.56 -25.66        1.79     41.65     221.29     333.16
+       A2|sub3:mom6s 289.72 31.32 -25.14        1.69     42.42     246.34     344.41
+      A2|rarAvg+up12 323.79 33.54 -28.98        1.74     46.67     295.11     421.56
+      A2|sub0:residR 286.76 31.12 -25.19        1.72     50.32     236.56     370.46
+       A2|sub3:ma200 300.20 32.02 -28.24        1.68     61.84     229.28     384.30
+       A2|rar12+up12 345.85 34.90 -30.17        1.79     67.76     256.20     467.70
+      A2|rar12s+up12 336.57 34.33 -28.98        1.77     72.20     231.99     423.30
+           A1|mom_3m 279.27 30.60 -27.57        1.36    109.61     249.91     534.97
+
+>>> 3 candidate(s) clear BOTH (a) PNL and (b) phase sd <= 30L
+              label  pnl_L    mdd  phase_sd
+A2|rarAvg+up12+dd1y 327.42 -24.46     10.68
+A2|rar12s+up12+dd1y 286.50 -25.88     15.03
+      A2|sub3:resid 291.55 -26.92     23.63
+
+trials total: 735   elapsed 160s

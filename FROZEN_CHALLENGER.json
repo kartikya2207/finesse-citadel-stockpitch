@@ -1,0 +1,44 @@
+{
+  "frozen_at_utc": "2026-09-02T19:11:02.960222+00:00",
+  "strategy_name": "CHALLENGER_rarAvg_up12_dd1y_quarterly_invvol_n10_volq20",
+  "parameters": {
+    "score_spec": {
+      "rar_mom_avg_6_12_skip1": 1.0,
+      "pct_up_months_12m": 1.0,
+      "max_dd_1y": 1.0
+    },
+    "cadence": "quarterly",
+    "weighting": "invvol",
+    "cap": 0.2,
+    "floor": 0.05,
+    "n_hold": 10,
+    "screens": {
+      "vol_1y": [
+        "drop_top_pctile",
+        0.2
+      ]
+    },
+    "sleeves": [
+      "NIFTY100",
+      "MIDCAP100",
+      "SMALLCAP100"
+    ],
+    "score_method": "rank",
+    "cost_per_side": 0.001,
+    "capital": 10000000.0
+  },
+  "source_sha256": {
+    "src/config.py": "4f8d82decd72f0f6d32488d048864044d38eb1f33e4e458dc7af539d2f94aeec",
+    "src/signals.py": "4bc464e482f94114d7411a088e1d0952fbbfa82e5ed3297efce912d7266cdbab",
+    "src/backtest.py": "5413e8281576e87302059cb261706dca163879e9ff0b6ae999f7358a2f24e52c",
+    "src/strategies.py": "8738cd797390a9b9e1c90a55519fc1955aeba22fc9ee55bcf60cf4e9442c11c7",
+    "src/search_guard.py": "da5545bf318279ee78af515f10c73b2bc51c4a602220685bf19a989688729a63"
+  },
+  "in_sample_window": [
+    "2021-01-01",
+    "2025-12-31"
+  ],
+  "selection_basis": "2021-2025 ONLY. Search ran on a world physically truncated to 2025-12-31 (src/search_guard.py). No 2026 observation entered any signal, screen, ranking, parameter choice or tie-break.",
+  "CONTAMINATION_DISCLOSURE": "SELECTED AFTER THE 2026 STRESS WINDOW WAS ALREADY UNSEALED (incumbent unsealed 2026-09-02T17:27:58Z). Although 2026 data was physically absent from the search world and played no part in selection, the SELECTOR had already seen the incumbent 2026 outcome. This candidate's 2026 stress number is therefore WEAKER EVIDENCE than the incumbent's was: the incumbent was frozen before anyone had seen 2026, this one was not. The 2026 figures below are a report-only diagnostic and were computed AFTER this file was written.",
+  "trials_at_selection": 820
+}
